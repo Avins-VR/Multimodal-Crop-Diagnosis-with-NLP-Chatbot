@@ -1,8 +1,8 @@
-# 🌿 AI Crop Sense – Multimodal AI Nutrient Deficiency Detection System
+# 🌿 AgriSense AI  – Multimodal AI Nutrient Deficiency Detection System
 
-AI Crop Sense is an **AI-powered multimodal agricultural intelligence system** designed to detect **nutrient deficiencies in crops** using a combination of **leaf image analysis and soil/environmental data**.
+AgriSense AI  is an **AI-powered multimodal agricultural intelligence system** designed to detect **nutrient deficiencies in crops** using a combination of **leaf image analysis and soil/environmental data**.
 
-Unlike traditional crop monitoring systems that rely only on image analysis, AI Crop Sense integrates **computer vision and environmental metadata** to make **more accurate and reliable predictions** about crop health.
+Unlike traditional crop monitoring systems that rely only on image analysis, AgriSense AI  integrates **computer vision and environmental metadata** to make **more accurate and reliable predictions** about crop health.
 
 The system classifies crop condition into:
 
@@ -37,7 +37,7 @@ Most existing AI crop systems rely **only on leaf image analysis**, which may pr
 
 # 💡 Proposed Solution
 
-AI Crop Sense introduces a **Multimodal AI-Based Crop Health Detection System**.
+AgriSense AI  introduces a **Multimodal AI-Based Crop Health Detection System**.
 
 Instead of using only images, the system combines:
 
@@ -111,7 +111,7 @@ Recommended Action: Apply Nitrogen Fertilizer
 
 # 🔄 Self-Learning Feedback Mechanism
 
-One of the key features of AI Crop Sense is its **self-learning feedback system**.
+One of the key features of AgriSense AI  is its **self-learning feedback system**.
 
 The system continuously improves using **real farm feedback**.
 
@@ -147,7 +147,7 @@ This allows the system to become **more accurate over time**.
 
 # 🤖 NLP Chatbot for Farmers
 
-AI Crop Sense includes an **NLP-based chatbot** that allows farmers to interact with the system in natural language.
+AgriSense AI  includes an **NLP-based chatbot** that allows farmers to interact with the system in natural language.
 
 Farmers can ask questions about crop health, soil conditions, or fertilizer usage.
 
