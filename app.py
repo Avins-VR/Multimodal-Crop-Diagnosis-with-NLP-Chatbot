@@ -539,7 +539,7 @@ rf_classes = rf_model.classes_
 # ================================
 # MISTRAL CLIENT
 # ================================
-MISTRAL_API_KEY = "pkf7qDcAL2N2msKtVyjLdxsHGQ7GwQl9"
+MISTRAL_API_KEY = "API KEY"
 mistral_client = Mistral(api_key=MISTRAL_API_KEY)
 
 # ================================
