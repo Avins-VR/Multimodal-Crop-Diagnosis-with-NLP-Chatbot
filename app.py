@@ -11,7 +11,7 @@ import numpy as np
 import cv2
 import pandas as pd
 import joblib
-from mistralai.client import MistralClient
+from mistralai import Mistral
 
 # ================================
 # PAGE SETTINGS
@@ -26,9 +26,18 @@ MODEL_PATH = "image_model.pth"
 
 def download_model():
     if not os.path.exists(MODEL_PATH):
-        url = "https://drive.google.com/uc?id=1QQuBf5gwGVR36Bn3HanBU5H5gGbaYznA"
-        print("Downloading model...")
-        gdown.download(url, MODEL_PATH, quiet=False)
+        file_id = "1QQuBf5gwGVR36Bn3HanBU5H5gGbaYznA"
+        url = f"https://drive.google.com/uc?export=download&id={file_id}"
+        
+        st.write("📥 Downloading model... please wait")
+        
+        gdown.download(
+            url,
+            MODEL_PATH,
+            quiet=False,
+            fuzzy=True,
+            resume=True
+        )
 # ================================
 # CUSTOM CSS — REDESIGNED UI
 # ================================
@@ -597,7 +606,7 @@ rf_classes = rf_model.classes_
 # MISTRAL CLIENT
 # ================================
 MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
-mistral_client = MistralClient(api_key=MISTRAL_API_KEY)
+mistral_client = Mistral(api_key=MISTRAL_API_KEY)
 
 # ================================
 # TRANSFORM
@@ -679,7 +688,7 @@ def get_agriculture_response(chat_history: list) -> str:
             "role": "assistant",
             "content": "Understood! I am your agriculture expert assistant."
         }
-        response = mistral_client.chat.complete(
+        response = mistral_client.chat.completions.create(
             model="mistral-small-latest",
             messages=[system_instruction, ack] + chat_history
         )
