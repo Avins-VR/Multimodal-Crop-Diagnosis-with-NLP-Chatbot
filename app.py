@@ -27,16 +27,14 @@ MODEL_PATH = "image_model.pth"
 def download_model():
     if not os.path.exists(MODEL_PATH):
         file_id = "1QQuBf5gwGVR36Bn3HanBU5H5gGbaYznA"
-        url = f"https://drive.google.com/uc?export=download&id={file_id}"
-        
+        url = f"https://drive.google.com/uc?id={file_id}"
+
         st.write("📥 Downloading model... please wait")
-        
+
         gdown.download(
             url,
             MODEL_PATH,
-            quiet=False,
-            fuzzy=True,
-            resume=True
+            quiet=False
         )
 # ================================
 # CUSTOM CSS — REDESIGNED UI
