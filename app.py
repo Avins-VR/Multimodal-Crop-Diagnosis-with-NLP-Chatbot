@@ -11,7 +11,7 @@ import numpy as np
 import cv2
 import pandas as pd
 import joblib
-from mistralai import Mistral
+from mistralai.client import MistralClient
 
 # ================================
 # PAGE SETTINGS
@@ -606,7 +606,7 @@ rf_classes = rf_model.classes_
 # MISTRAL CLIENT
 # ================================
 MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
-mistral_client = Mistral(api_key=MISTRAL_API_KEY)
+mistral_client = MistralClient(api_key=MISTRAL_API_KEY)
 
 # ================================
 # TRANSFORM
@@ -667,8 +667,8 @@ Question: {question}
 
 Reply only YES or NO."""
 
-        response = mistral_client.chat.complete(
-            model="mistral-small-latest",
+        response = mistral_client.chat(
+            model="mistral-small",
             messages=[{"role": "user", "content": classify_prompt}]
         )
         result = response.choices[0].message.content.strip().upper()
