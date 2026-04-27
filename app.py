@@ -679,19 +679,24 @@ Reply only YES or NO."""
 def get_agriculture_response(chat_history: list) -> str:
     try:
         time.sleep(0.5)
+
         system_instruction = {
             "role": "user",
             "content": "You are an expert agriculture assistant. Answer only agriculture-related questions with accurate, practical advice. Use bullet points or numbered steps when explaining processes. Keep responses concise."
         }
+
         ack = {
             "role": "assistant",
             "content": "Understood! I am your agriculture expert assistant."
         }
+
         response = mistral_client.chat.complete(
             model="mistral-small-latest",
             messages=[system_instruction, ack] + chat_history
         )
+
         return response.choices[0].message.content
+
     except Exception as e:
         return f"⚠️ Error: {e}"
 
