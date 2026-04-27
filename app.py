@@ -687,7 +687,7 @@ def get_agriculture_response(chat_history: list) -> str:
             "role": "assistant",
             "content": "Understood! I am your agriculture expert assistant."
         }
-        response = mistral_client.chat.completions.create(
+        response = mistral_client.chat.complete(
             model="mistral-small-latest",
             messages=[system_instruction, ack] + chat_history
         )
