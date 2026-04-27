@@ -11,7 +11,7 @@ import numpy as np
 import cv2
 import pandas as pd
 import joblib
-from mistralai.client import MistralClient
+from mistralai import Mistral
 
 # ================================
 # PAGE SETTINGS
@@ -604,7 +604,11 @@ rf_classes = rf_model.classes_
 # MISTRAL CLIENT
 # ================================
 MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
-mistral_client = MistralClient(api_key=MISTRAL_API_KEY)
+
+if not MISTRAL_API_KEY:
+    st.error("❌ MISTRAL_API_KEY not found. Add it in Streamlit secrets.")
+
+mistral_client = Mistral(api_key=MISTRAL_API_KEY)
 
 # ================================
 # TRANSFORM
@@ -657,6 +661,7 @@ def get_recommendation(metadata_dict, predicted_class):
 def check_agriculture(question: str) -> bool:
     try:
         time.sleep(0.5)
+
         classify_prompt = f"""You are a strict topic classifier. Reply with EXACTLY one word: YES or NO.
 
 Is the following question related to agriculture, farming, crops, soil, fertilizers, irrigation, plant diseases, livestock, or pests?
@@ -665,15 +670,17 @@ Question: {question}
 
 Reply only YES or NO."""
 
-        response = mistral_client.chat(
+        response = mistral_client.chat.complete(
             model="mistral-small-latest",
             messages=[{"role": "user", "content": classify_prompt}]
         )
-        result = response["choices"][0]["message"]["content"].strip().upper()
-        return result.startswith("YES")
-    except Exception as e:
-        return False
 
+        result = response.choices[0].message.content.strip().upper()
+        return result.startswith("YES")
+
+    except Exception as e:
+        st.error(f"Chatbot error: {e}")
+        return False
 
 def get_agriculture_response(chat_history: list) -> str:
     try:
@@ -681,7 +688,7 @@ def get_agriculture_response(chat_history: list) -> str:
 
         system_instruction = {
             "role": "user",
-            "content": "You are an expert agriculture assistant. Answer only agriculture-related questions with accurate, practical advice. Use bullet points or numbered steps when explaining processes. Keep responses concise."
+            "content": "You are an expert agriculture assistant. Answer only agriculture-related questions with accurate, practical advice. Use bullet points or numbered steps. Keep responses concise."
         }
 
         ack = {
@@ -689,12 +696,12 @@ def get_agriculture_response(chat_history: list) -> str:
             "content": "Understood! I am your agriculture expert assistant."
         }
 
-        response = mistral_client.chat(
+        response = mistral_client.chat.complete(
             model="mistral-small-latest",
             messages=[system_instruction, ack] + chat_history
         )
 
-        return response["choices"][0]["message"]["content"]
+        return response.choices[0].message.content
 
     except Exception as e:
         return f"⚠️ Error: {e}"
