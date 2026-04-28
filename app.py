@@ -29,8 +29,6 @@ def download_model():
         file_id = "1QQuBf5gwGVR36Bn3HanBU5H5gGbaYznA"
         url = f"https://drive.google.com/uc?id={file_id}"
 
-        st.write("📥 Downloading model... please wait")
-
         gdown.download(
             url,
             MODEL_PATH,
