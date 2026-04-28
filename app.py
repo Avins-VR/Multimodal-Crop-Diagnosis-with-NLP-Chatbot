@@ -657,6 +657,7 @@ def get_recommendation(metadata_dict, predicted_class):
 def check_agriculture(question: str) -> bool:
     try:
         time.sleep(0.5)
+
         classify_prompt = f"""You are a strict topic classifier. Reply with EXACTLY one word: YES or NO.
 
 Is the following question related to agriculture, farming, crops, soil, fertilizers, irrigation, plant diseases, livestock, or pests?
@@ -669,9 +670,14 @@ Reply only YES or NO."""
             model="mistral-small-latest",
             messages=[{"role": "user", "content": classify_prompt}]
         )
-        result = response["choices"][0]["message"]["content"].strip().upper()
+
+        # ✅ FIX: correct parsing
+        result = response.choices[0].message.content.strip().upper()
+
         return result.startswith("YES")
+
     except Exception as e:
+        st.error(f"Chatbot error: {e}")
         return False
 
 
@@ -681,24 +687,29 @@ def get_agriculture_response(chat_history: list) -> str:
 
         system_instruction = {
             "role": "user",
-            "content": "You are an expert agriculture assistant. Answer only agriculture-related questions with accurate, practical advice. Use bullet points or numbered steps when explaining processes. Keep responses concise."
-        }
+            "content": """
+You are a strict agriculture assistant.
 
-        ack = {
-            "role": "assistant",
-            "content": "Understood! I am your agriculture expert assistant."
+RULES:
+- Answer ONLY agriculture-related questions.
+- Agriculture includes: crops, soil, fertilizers, irrigation, pests, plant diseases, farming techniques.
+- If the question is NOT related to agriculture, reply EXACTLY with:
+"I'm scoped to agriculture topics only — try asking about crops, soil health, fertilizers, irrigation, or pests."
+
+- Keep answers concise.
+- Use bullet points or steps when needed.
+"""
         }
 
         response = mistral_client.chat(
             model="mistral-small-latest",
-            messages=[system_instruction, ack] + chat_history
+            messages=[system_instruction] + chat_history
         )
 
-        return response["choices"][0]["message"]["content"]
+        return response.choices[0].message.content
 
     except Exception as e:
         return f"⚠️ Error: {e}"
-
 
 # ================================
 # SESSION STATE
@@ -782,24 +793,15 @@ with col_chat:
         send_clicked = st.button("➤", key="send_btn")
 
     if send_clicked and user_input.strip():
-        with st.spinner(""):
-            is_agri = check_agriculture(user_input)
+        st.session_state.chat_messages.append({"role": "user", "content": user_input})
 
-        if not is_agri:
-            st.session_state.chat_messages.append({"role": "user", "content": user_input})
-            st.session_state.chat_messages.append({
-                "role": "assistant",
-                "content": "I'm scoped to agriculture topics only — try asking about crops, soil health, fertilizers, irrigation, or pests."
-            })
-        else:
-            st.session_state.chat_messages.append({"role": "user", "content": user_input})
-            with st.spinner(""):
-                reply = get_agriculture_response(st.session_state.chat_messages)
-            st.session_state.chat_messages.append({"role": "assistant", "content": reply})
+        with st.spinner(""):
+            reply = get_agriculture_response(st.session_state.chat_messages)
+
+        st.session_state.chat_messages.append({"role": "assistant", "content": reply})
 
         st.session_state.chat_input_key += 1
         st.rerun()
-
     col_clr1, col_clr2, col_clr3 = st.columns([1.5, 2, 0.5])
     with col_clr2:
         if st.button("Clear Chat", key="clear_chat"):
